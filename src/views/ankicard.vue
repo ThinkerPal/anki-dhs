@@ -3,11 +3,14 @@
     <v-card-text rounded>
 
       <div>{{ deckname }}</div>
-      <p class="text-h4 text--primary">
+      <div style="margin:5px" class="text-h4 text--primary">
+        
+        <span style="font-size:3vh">Topic: {{card.topic}}</span>
+        <br></br>
         <a v-bind:href = "card.question" target = "_blank" rel = "norefferer noopener"> Question link</a>
-        <br></br><a>Time: {{ card.time}} minutes</a>
-        <br></br><a>Topic: {{card.topic}}</a>
-      </p>
+        <br></br>
+        <span style="font-size:2vh">Time: {{ card.time}} minutes</span>
+      </div>
     </v-card-text>
     <v-card-actions>
       <v-flex class='mb-5'>
