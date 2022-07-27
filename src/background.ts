@@ -48,6 +48,27 @@ app.on("window-all-closed", () => {
   }
 });
 
+app.on("will-quit", () => {
+  if (!isDevelopment) {
+    const {exec} = require("child_process")
+    if (process.platform === "win32"){
+      exec('taskkill /f /t /im ankibackend.exe', (err, stdout, stderr) => {
+        if (err) {
+          console.log(err)
+          return;
+        }
+      })
+    }else {
+      exec('killall ankibackend', (err, stdout, stderr) => {
+        if (err) {
+          console.log(err)
+          return;
+        } 
+      })
+    }
+  }
+});
+
 app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -76,6 +97,28 @@ app.on("ready", async () => {
         console.log(`stderr: ${data}`); // when error
       });
     }
+  }else {
+
+    // TODO: Change this to use pyinstaller instead
+    
+    if (process.platform === "win32"){
+      var ankibackend = require("child_process").spawn("py", ['./backend/backend.py']);
+      ankibackend.stdout.on('data', function (data) {
+        console.log("data: ", data.toString('utf8'));
+      });
+      ankibackend.stderr.on('data', (data) => {
+        console.log(`stderr: ${data}`); // when error
+      });
+    } else {
+      var ankibackend = require("child_process").spawn("python3", ['./backend/backend.py']);
+      ankibackend.stdout.on('data', function (data) {
+        console.log("data: ", data.toString('utf8'));
+      });
+      ankibackend.stderr.on('data', (data) => {
+        console.log(`stderr: ${data}`); // when error
+      });
+    }
+
   }
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
