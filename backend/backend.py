@@ -2,6 +2,7 @@ import flask, sqlite3, random
 from flask import request, jsonify
 from flask_cors import CORS
 from rake_nltk import Rake
+import os
 
 r = Rake()
 
@@ -152,4 +153,7 @@ def anki_cards_generate(deckid):
    return 'completed'
 
 if __name__ == '__main__':
+   print(os.getcwd())
+   if "backend.db" not in os.listdir():
+      os.chdir("backend")
    app.run()

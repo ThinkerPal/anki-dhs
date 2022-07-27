@@ -25,7 +25,6 @@ async function createWindow() {
           .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
       contextIsolation: !(process.env
           .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
-      preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -59,6 +58,25 @@ app.on("activate", () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
+  if (isDevelopment) {
+    if (process.platform === "win32"){
+      var ankibackend = require("child_process").spawn("py", ['./backend/backend.py']);
+      ankibackend.stdout.on('data', function (data) {
+        console.log("data: ", data.toString('utf8'));
+      });
+      ankibackend.stderr.on('data', (data) => {
+        console.log(`stderr: ${data}`); // when error
+      });
+    } else {
+      var ankibackend = require("child_process").spawn("python3", ['./backend/backend.py']);
+      ankibackend.stdout.on('data', function (data) {
+        console.log("data: ", data.toString('utf8'));
+      });
+      ankibackend.stderr.on('data', (data) => {
+        console.log(`stderr: ${data}`); // when error
+      });
+    }
+  }
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {

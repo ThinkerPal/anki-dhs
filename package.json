@@ -8,8 +8,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve",
+    "electron:build": "cd backend/update_database && python3 update.py && cd ../.. && vue-cli-service electron:build",
+    "electron:serve": "cd backend/update_database && python3 update.py && cd ../.. && vue-cli-service electron:serve",
+    "dev": "cd backend/update_database && python3 update.py && cd ../.. && vue-cli-service electron:serve",
+    "setup": "npm install && cd backend/update_database && python3 update.py",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
@@ -17,6 +19,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "firacode": "^5.2.0",
+    "python-shell": "^3.0.1",
     "router": "^1.3.7",
     "vue": "^2.6.14",
     "vue-router": "^3.5.2",

@@ -23,3 +23,12 @@ pnpm-debug.log*
 
 #Electron-builder output
 /dist_electron
+
+
+# Database
+backend.db
+questions.csv
+
+
+# Dev Tools
+.python-version
