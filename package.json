@@ -11,7 +11,9 @@
     "electron:build": "cd backend/update_database && python3 update.py && cd ../.. && vue-cli-service electron:build",
     "electron:serve": "cd backend/update_database && python3 update.py && cd ../.. && vue-cli-service electron:serve",
     "dev": "cd backend/update_database && python3 update.py && cd ../.. && vue-cli-service electron:serve",
-    "setup": "npm install && cd backend/update_database && python3 update.py",
+    "setup": "pip3 install -r requirements.txt && npm install --legacy-peer-deps && cd backend/update_database && python3 update.py",
+    "win:dev": "cd backend/update_database && py update.py && cd ../.. && vue-cli-service electron:serve",
+    "win:setup": "py -m pip install -r requirements.txt && npm install --legacy-peer-deps && cd backend/update_database && py update.py",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },

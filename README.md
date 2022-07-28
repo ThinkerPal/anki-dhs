@@ -13,11 +13,25 @@ This app is based on the client template found at buildingblocs/vuetify-todo-app
 - [ ] Figure out codesigning and distribution (the actual npm run dist script)
 
 ## Project setup
-Before you start developing, run `npm run setup` to set up your developing space
+Before you start developing, run the following commands:
+### Windows 
+```cmd
+npm run win:setup
+```
+### *nix/macOS
+```bash
+npm run setup
+```
+
+
 
 ### How to run the application locally
 ```
 npm run dev
+```
+On Windows, run:
+```
+npm run win:dev
 ```
 
 ### Compiles and minifies for production (to ~~unreadable~~ HTML/CSS/JS)
