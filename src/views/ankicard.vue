@@ -6,9 +6,11 @@
       <div style="margin:5px" class="text-h4 text--primary">
         
         <span style="font-size:3vh">Topic: {{card.topic}}</span>
-        <br></br>
+        <br/>
+        <br/> 
         <a v-bind:href = "card.question" target = "_blank" rel = "norefferer noopener"> Question link</a>
-        <br></br>
+        <br/>
+        <br/>
         <span style="font-size:2vh">Time: {{ card.time}} minutes</span>
       </div>
     </v-card-text>
@@ -79,14 +81,14 @@ export default Vue.extend({
   methods: {
     initialize() {
       console.log(this.deckid);
-      axios.get("/decks/"+ this.deckid).then(resp => {
+      axios.get("/decks/"+ this.deckid).then(function(resp){
         console.log(resp.data);
         this.card = resp.data;
       });
     },
-    setFamilarity(familiarity:number){
+    setFamilarity(familiarity){
       this.card.familiarity = familiarity;
-      axios.post("/decks/"+ this.deckid,this.card).then(resp=>{
+      axios.post("/decks/"+ this.deckid,this.card).then(function(resp){
         this.reveal =  false;
         this.initialize();
       });

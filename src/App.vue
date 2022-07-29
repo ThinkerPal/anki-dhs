@@ -15,11 +15,7 @@ export default Vue.extend({
   data: () => ({
   }),
   computed: {
-    routes(): Array<{
-      name: string;
-      route: string;
-      icon: string;
-    }> {
+    routes() {
       // Add routes here to correspond to router.ts
       return [
         {

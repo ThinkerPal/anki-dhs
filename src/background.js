@@ -3,34 +3,29 @@
 import { app, protocol, BrowserWindow } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import path from "path";
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } }
+  { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
 
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    // titleBarStyle: 'hiddenInset',
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
     webPreferences: {
-      
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: (process.env
-          .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
-      contextIsolation: !(process.env
-          .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
-    }
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+    },
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
+    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
@@ -39,33 +34,33 @@ async function createWindow() {
   }
 }
 
+app.on("will-quit", () => {
+  if (!isDevelopment) {
+    const { exec } = require("child_process");
+    if (process.platform === "win32") {
+      exec("taskkill /f /t /im ankibackend.exe", function(err) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+      });
+    } else {
+      exec("killall ankibackend", function(err) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+      });
+    }
+  }
+});
+
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
     app.quit();
-  }
-});
-
-app.on("will-quit", () => {
-  if (!isDevelopment) {
-    const {exec} = require("child_process")
-    if (process.platform === "win32"){
-      exec('taskkill /f /t /im ankibackend.exe', (err, stdout, stderr) => {
-        if (err) {
-          console.log(err)
-          return;
-        }
-      })
-    }else {
-      exec('killall ankibackend', (err, stdout, stderr) => {
-        if (err) {
-          console.log(err)
-          return;
-        } 
-      })
-    }
   }
 });
 
@@ -80,45 +75,44 @@ app.on("activate", () => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
   if (isDevelopment) {
-    if (process.platform === "win32"){
-      var ankibackend = require("child_process").spawn("py", ['./backend/backend.py']);
-      ankibackend.stdout.on('data', function (data) {
-        console.log("data: ", data.toString('utf8'));
+    console.log("In Development Mode");
+    if (process.platform === "win32") {
+      let ankibackend = require("child_process").spawn("py", ["backend/backend.py"]);
+      ankibackend.stdout.on("data", function (data) {
+        console.log("data: ", data.toString("utf8"));
       });
-      ankibackend.stderr.on('data', (data) => {
+      ankibackend.stderr.on("data", (data) => {
         console.log(`stderr: ${data}`); // when error
       });
     } else {
-      var ankibackend = require("child_process").spawn("python3", ['./backend/backend.py']);
-      ankibackend.stdout.on('data', function (data) {
-        console.log("data: ", data.toString('utf8'));
+      let ankibackend = require("child_process").spawn("python3", ["backend/backend.py"]);
+      ankibackend.stdout.on("data", function (data) {
+        console.log("data: ", data.toString("utf8"));
       });
-      ankibackend.stderr.on('data', (data) => {
+      ankibackend.stderr.on("data", (data) => {
         console.log(`stderr: ${data}`); // when error
       });
     }
-  }else {
-
+  } else {
     // TODO: Change this to use pyinstaller instead
-    
-    if (process.platform === "win32"){
-      var ankibackend = require("child_process").spawn("py", ['./backend/backend.py']);
-      ankibackend.stdout.on('data', function (data) {
-        console.log("data: ", data.toString('utf8'));
+    console.log("In Production Mode");
+    if (process.platform === "win32") {
+      let ankibackend = require("child_process").spawn("py", ["backend/backend.py"]);
+      ankibackend.stdout.on("data", function (data) {
+        console.log("data: ", data.toString("utf8"));
       });
-      ankibackend.stderr.on('data', (data) => {
+      ankibackend.stderr.on("data", function (data) {
         console.log(`stderr: ${data}`); // when error
       });
     } else {
-      var ankibackend = require("child_process").spawn("python3", ['./backend/backend.py']);
-      ankibackend.stdout.on('data', function (data) {
-        console.log("data: ", data.toString('utf8'));
+      let ankibackend = require("child_process").spawn("python3", ["backend/backend.py"]);
+      ankibackend.stdout.on("data", function (data) {
+        console.log("data: ", data.toString("utf8"));
       });
-      ankibackend.stderr.on('data', (data) => {
+      ankibackend.stderr.on("data", function(data) {
         console.log(`stderr: ${data}`); // when error
       });
     }
-
   }
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools

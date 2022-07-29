@@ -3,21 +3,21 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: [
-    "plugin:vue/essential",
-    "@vue/typescript",
-    "@vue/typescript/recommended",
-  ],
+  extends: ["plugin:vue/essential"],
   parserOptions: {
     ecmaVersion: 2020,
   },
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-    quotes: ["error", "double", {allowTemplateLiterals: true}],
+    quotes: ["error", "double", { allowTemplateLiterals: true }],
     semi: "error",
+    "vue/multi-word-component-names": "off",
+    "vue/valid-v-slot": [
+      "error",
+      {
+        allowModifiers: true,
+      },
+    ],
   },
-  'vue/valid-v-slot': ['error', {
-    allowModifiers: true,
-  }],  
 };
