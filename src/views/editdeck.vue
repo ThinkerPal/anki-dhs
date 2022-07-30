@@ -2,7 +2,7 @@
   <v-data-table :headers="headers" :items="cards" class="elevation-1">
     <template v-slot:top>
       <v-toolbar flat>
-        <v-toolbar-title>{{ $route.params.deckname }}</v-toolbar-title>
+        <v-toolbar-title><a href="app://./index.html">{{ $route.params.deckname }}</a></v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
