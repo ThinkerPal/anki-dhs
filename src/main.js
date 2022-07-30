@@ -8,7 +8,7 @@ import axios from "axios";
 
 Vue.config.productionTip = false;
 
-axios.defaults.baseURL = "http://127.0.0.1:5000/anki";
+axios.defaults.baseURL = "http://127.0.0.1:5500/anki";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 new Vue({

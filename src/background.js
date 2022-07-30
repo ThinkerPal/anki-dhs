@@ -34,9 +34,9 @@ async function createWindow() {
   }
 }
 
-app.on("will-quit", () => {
+app.on("quit", () => {
+  const { exec } = require("child_process");
   if (!isDevelopment) {
-    const { exec } = require("child_process");
     if (process.platform === "win32") {
       exec("taskkill /f /t /im ankibackend.exe", function(err) {
         if (err) {
@@ -52,6 +52,8 @@ app.on("will-quit", () => {
         }
       });
     }
+  }else {
+    console.log("Remember to kill the python process if needed!");
   }
 });
 
@@ -77,7 +79,8 @@ app.on("ready", async () => {
   if (isDevelopment) {
     console.log("In Development Mode");
     if (process.platform === "win32") {
-      let ankibackend = require("child_process").spawn("py", ["backend/backend.py"]);
+      let ankibackend = require("child_process");
+      await ankibackend.spawn("py", ["backend/backend.py"]);
       ankibackend.stdout.on("data", function (data) {
         console.log("data: ", data.toString("utf8"));
       });
@@ -97,7 +100,7 @@ app.on("ready", async () => {
     // TODO: Change this to use pyinstaller instead
     console.log("In Production Mode");
     if (process.platform === "win32") {
-      let ankibackend = require("child_process").spawn("py", ["backend/backend.py"]);
+      let ankibackend = require("child_process").spawn("backend/ankibackend.exe");
       ankibackend.stdout.on("data", function (data) {
         console.log("data: ", data.toString("utf8"));
       });
@@ -105,7 +108,9 @@ app.on("ready", async () => {
         console.log(`stderr: ${data}`); // when error
       });
     } else {
-      let ankibackend = require("child_process").spawn("python3", ["backend/backend.py"]);
+      // console.log("test");
+      // let ankibackend = require("child_process").spawn("backend/ankibackend");
+      let ankibackend = require("child_process").exec("backend/ankibackend");
       ankibackend.stdout.on("data", function (data) {
         console.log("data: ", data.toString("utf8"));
       });
@@ -122,7 +127,10 @@ app.on("ready", async () => {
       console.error("Vue Devtools failed to install:", e.toString());
     }
   }
-  createWindow();
+  setTimeout(() => {
+    createWindow();
+  }, 15000);
+  
 });
 
 // Exit cleanly on request from parent process in development mode.

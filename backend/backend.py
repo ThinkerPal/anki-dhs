@@ -3,13 +3,29 @@ from flask import request, jsonify
 from flask_cors import CORS
 from rake_nltk import Rake
 import os
+from update_database.update import check_update
 
 r = Rake()
 
 app = flask.Flask(__name__)
 cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+# app.config['CORS_HEADERS'] = 'Content-Type'
 temp_cardid = 0
+
+# white = ['http://localhost:8080']
+
+# @app.after_request
+# def add_cors_headers(response):
+#     r = request.referrer[:-1]
+#     if r in white:
+#         response.headers.add('Access-Control-Allow-Origin', r)
+#         response.headers.add('Access-Control-Allow-Credentials', 'true')
+#         response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+#         response.headers.add('Access-Control-Allow-Headers', 'Cache-Control')
+#         response.headers.add('Access-Control-Allow-Headers', 'X-Requested-With')
+#         response.headers.add('Access-Control-Allow-Headers', 'Authorization')
+#         response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+#     return response
 
 @app.route('/')
 def login():
@@ -17,7 +33,7 @@ def login():
 
 @app.route('/anki/decks')
 def anki_decks():
-   db = sqlite3.connect('backend.db')
+   db = sqlite3.connect("backend.db")
    cursor = db.execute('SELECT * FROM DECKS')
    ls = []
    for rows in cursor.fetchall():
@@ -28,18 +44,18 @@ def anki_decks():
 def anki_decks_edit():
    if request.method == "DELETE":
       deckid = request.get_json()['deckid']
-      db = sqlite3.connect('backend.db')
+      db = sqlite3.connect("backend.db")
       db.execute('DELETE FROM DECKS WHERE DECKID = ?', (deckid,))
       db.execute('DELETE FROM CARDS WHERE DECKID = ?', (deckid,))
       db.commit()
 
    if request.method == "POST":
       deckname = request.get_json()['deckname']
-      db = sqlite3.connect('backend.db')
+      db = sqlite3.connect("backend.db")
       db.execute("INSERT INTO DECKS(DECKNAME) VALUES(?)", (deckname,))
       db.commit()
       
-   db = sqlite3.connect('backend.db')
+   db = sqlite3.connect("backend.db")
    cursor = db.execute('SELECT DECKID, DECKNAME FROM DECKS')
    returndata = []
    for rows in cursor.fetchall():
@@ -50,12 +66,12 @@ def anki_decks_edit():
 @app.route('/anki/decks/<deckid>', methods=["GET","POST"])
 def anki_specific_deck(deckid):
    if request.method == "POST":
-      db = sqlite3.connect('backend.db') 
+      db = sqlite3.connect("backend.db") 
       cardid, familiarity = request.get_json()['cardid'], request.get_json()['familiarity']
       db.execute('UPDATE CARDS SET FAMILIARITY = ? WHERE CARDID = ?', (familiarity, cardid))
       db.commit()
          
-   db = sqlite3.connect('backend.db')
+   db = sqlite3.connect("backend.db")
    deckname = db.execute('SELECT DECKNAME FROM DECKS WHERE DECKID = ?', (deckid,)).fetchone()[0]
 
    empty = True
@@ -77,7 +93,7 @@ def anki_specific_deck(deckid):
 
 @app.route('/anki/cards/edit/<int:deckid>', methods=["GET","POST","DELETE","PATCH"])
 def edit_deck(deckid):
-   db = sqlite3.connect('backend.db') 
+   db = sqlite3.connect("backend.db") 
    if request.method == "DELETE":
       print("delete request received")
       cardid = request.get_json()['cardid']
@@ -145,7 +161,7 @@ def anki_cards_generate(deckid):
          questions.append(i[0])
          answers.append(i[1])
 
-      db = sqlite3.connect('backend.db')
+      db = sqlite3.connect("backend.db")
       for i in range(len(questions)):
          db.execute('INSERT INTO CARDS(QUESTION, ANSWER, DECKID, FAMILIARITY) VALUES(?,?,?,0)', (questions[i],answers[i],deckid))
          db.commit()
@@ -153,7 +169,29 @@ def anki_cards_generate(deckid):
    return 'completed'
 
 if __name__ == '__main__':
-   print(os.getcwd())
-   if "backend.db" not in os.listdir():
-      os.chdir("backend")
-   app.run()
+   db_change = True
+   try: 
+      a = os.path.abspath(__file__)
+   except:   
+      if "backend.db" in os.listdir():
+         db_change = False
+   else:
+      if a[-2:] == "py":
+         os.chdir(a[:-10])
+      else:
+         os.chdir(a[:-7])
+   check_update() 
+   if db_change:
+      print("db changed")
+      os.chdir("db/")
+   # a = os.walk(".")
+   # for line in a:
+   #    print(line)
+   # print("dirs: ")
+   # print(os.listdir())
+   # print("pwds:")
+   # print(os.getcwd())
+   
+   # a = input()
+   # os.environ["FLASK_ENV"] = "development"
+   app.run(port=5500, debug=False)

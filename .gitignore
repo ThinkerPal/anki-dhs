@@ -30,5 +30,12 @@ backend.db
 questions.csv
 
 
-# Dev Tools
+# Python Dev Tools
 .python-version
+
+# Pyinstaller output
+backend/build*
+*.pyo
+*.pyc
+*.spec
+ankibackend
