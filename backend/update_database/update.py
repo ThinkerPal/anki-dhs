@@ -29,13 +29,25 @@ with open('questions.csv', 'r') as file:
 indb = []
 connection = sqlite3.connect("../backend.db")
 
-a = connection.execute("SELECT QUESTION FROM CARDS")
+a = connection.execute("SELECT QUESTION FROM CARDS WHERE DECKID = 1")
 indb = [i[0] for i in a]
-
+topics=[]
+a = connection.execute("SELECT DECKNAME FROM DECKS")
+for i in a:
+    topics.append(i[0])
+"""
+for i in ls:
+    if i[2] not in topics:
+        topics.append(i[2])
+topics = topics[1:]
+"""
 changed = 0
+print(topics)
 for i in range(1,len(ls)):
+    deckid = topics.index(ls[i][2]) + 2
     if ls[i][1] not in indb:
         connection.execute("INSERT INTO CARDS(CARDID,DECKID,QUESTION,ANSWER,FAMILIARITY,TIME,TOPIC) VALUES(?,?,?,?,?,?,?)", (i,1,ls[i][1],ls[i][5],0,ls[i][4],ls[i][2]))
+        connection.execute("INSERT INTO CARDS(CARDID,DECKID,QUESTION,ANSWER,FAMILIARITY,TIME,TOPIC) VALUES(?,?,?,?,?,?,?)", (int(str(deckid)+"00"+str(i)),deckid,ls[i][1],ls[i][5],0,ls[i][4],ls[i][2]))
         changed += 1
 
 connection.commit()

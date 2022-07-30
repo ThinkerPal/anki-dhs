@@ -1,7 +1,9 @@
 <template>
   <v-card class="card">
     <v-card-text rounded>
-
+      <div>
+        <a onclick="history.go(-1)" target = "_blank" rel = "norefferer noopener"> Go back</a>
+      </div>
       <div>{{ deckname }}</div>
       <div style="margin:5px" class="text-h4 text--primary">
         
