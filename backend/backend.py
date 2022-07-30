@@ -3,29 +3,14 @@ from flask import request, jsonify
 from flask_cors import CORS
 from rake_nltk import Rake
 import os
+import sys
 from update_database.update import check_update
 
 r = Rake()
 
 app = flask.Flask(__name__)
 cors = CORS(app)
-# app.config['CORS_HEADERS'] = 'Content-Type'
 temp_cardid = 0
-
-# white = ['http://localhost:8080']
-
-# @app.after_request
-# def add_cors_headers(response):
-#     r = request.referrer[:-1]
-#     if r in white:
-#         response.headers.add('Access-Control-Allow-Origin', r)
-#         response.headers.add('Access-Control-Allow-Credentials', 'true')
-#         response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-#         response.headers.add('Access-Control-Allow-Headers', 'Cache-Control')
-#         response.headers.add('Access-Control-Allow-Headers', 'X-Requested-With')
-#         response.headers.add('Access-Control-Allow-Headers', 'Authorization')
-#         response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
-#     return response
 
 @app.route('/')
 def login():
@@ -184,14 +169,4 @@ if __name__ == '__main__':
    if db_change:
       print("db changed")
       os.chdir("db/")
-   # a = os.walk(".")
-   # for line in a:
-   #    print(line)
-   # print("dirs: ")
-   # print(os.listdir())
-   # print("pwds:")
-   # print(os.getcwd())
-   
-   # a = input()
-   # os.environ["FLASK_ENV"] = "development"
    app.run(port=5500, debug=False)

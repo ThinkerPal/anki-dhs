@@ -8,8 +8,8 @@ import sys
 os.chdir("backend/")
 
 if sys.platform == "win32":
-    os.system("rm ankibackend.exe && rm -r build")
-    os.system("rm ankibackend && rm -r build && pyinstaller --clean --onefile --add-binary \"db\\backend.db;db\" --exclude=tkinter --hidden-import requests --distpath . --name ankibackend backend.py")
+    os.system("del ankibackend.exe && del build")
+    os.system("pyinstaller --clean --onefile --add-binary \"db\\backend.db;db\" --exclude=tkinter --hidden-import requests --hidden-import flask-cors --distpath . --name ankibackend backend.py")
 else: # Currently using 
     os.system("rm ankibackend && rm -r build")
     try: 
