@@ -1,4 +1,5 @@
 const { defineConfig } = require("@vue/cli-service");
+let ankibackend = process.platform !== "win32" ? "backend/ankibackend" : "backend/ankibackend.exe";
 module.exports = defineConfig({
   transpileDependencies: ["vuetify"],
   pluginOptions: {
@@ -26,8 +27,8 @@ module.exports = defineConfig({
         files: ["**/*"],
         extraFiles: [
           {
-            from: "backend/ankibackend*",
-            to: "backend/ankibackend*",
+            from: ankibackend,
+            to: ankibackend,
             filter: "**/*",
           },
           {

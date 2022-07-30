@@ -107,10 +107,11 @@ app.on("ready", async () => {
       ankibackend.stderr.on("data", function (data) {
         console.log(`stderr: ${data}`); // when error
       });
-    } else {
+    } else if (process.platform === "darwin") {
+      // Hacky workaround for macOS
       // console.log("test");
       // let ankibackend = require("child_process").spawn("backend/ankibackend");
-      let ankibackend = require("child_process").exec("backend/ankibackend");
+      let ankibackend = require("child_process").exec("../backend/ankibackend");
       ankibackend.stdout.on("data", function (data) {
         console.log("data: ", data.toString("utf8"));
       });
