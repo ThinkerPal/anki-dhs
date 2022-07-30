@@ -100,6 +100,7 @@ app.on("ready", async () => {
     // TODO: Change this to use pyinstaller instead
     console.log("In Production Mode");
     if (process.platform === "win32") {
+      console.log("Current Directory: ", __dirname);
       let ankibackend = require("child_process").spawn("backend/ankibackend.exe");
       ankibackend.stdout.on("data", function (data) {
         console.log("data: ", data.toString("utf8"));

@@ -9,8 +9,8 @@ os.chdir("backend/")
 
 if sys.platform == "win32":
     os.system("del ankibackend.exe && del build")
-    os.system("pyinstaller --clean --onefile --add-binary \"db\\backend.db;db\" --exclude=tkinter --hidden-import requests --hidden-import flask-cors --distpath . --name ankibackend backend.py")
-else: # Currently using 
+    os.system("pyinstaller --clean --onefile --add-binary \"db\\backend.db;db\" --exclude=tkinter --hidden-import requests --distpath . --name ankibackend backend.py")
+elif sys.platform == "darwin": 
     os.system("rm ankibackend && rm -r build")
     try: 
         a = os.environ["CODESIGN_ANKI"]
