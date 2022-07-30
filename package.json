@@ -1,6 +1,6 @@
 {
   "name": "anki-revision-app",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "This is a revision app built for Computing Students",
   "author": "Computing Class of 2022",
@@ -9,7 +9,7 @@
     "web:build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "electron:build": "python3 build/scripts/build-backend.py && vue-cli-service electron:build",
-    "build": "python3 build/scripts/build-backend.py && vue-cli-service electron:build",
+    "build": "python3 build/scripts/build-backend.py && vue-cli-service electron:build -wm",
     "electron:serve": "vue-cli-service electron:serve",
     "dev": "vue-cli-service electron:serve",
     "dev-web": "vue-cli-service serve",

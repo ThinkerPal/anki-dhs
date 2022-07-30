@@ -66,6 +66,7 @@ def anki_decks_edit():
 @app.route('/anki/decks/<deckid>', methods=["GET","POST"])
 def anki_specific_deck(deckid):
    if request.method == "POST":
+      print(request.get_json())
       db = sqlite3.connect("backend.db") 
       cardid, familiarity = request.get_json()['cardid'], request.get_json()['familiarity']
       db.execute('UPDATE CARDS SET FAMILIARITY = ? WHERE CARDID = ?', (familiarity, cardid))

@@ -16,6 +16,12 @@ module.exports = defineConfig({
           darkModeSupport: true,
           type: "development",
           identity: process.env.CODESIGN_ANKI,
+          target: [
+            {
+              target: "dmg",
+              arch: "x64",
+            },
+          ],
           // provisioningProfile: "/Users/thinkerpal/tkrobot.appledist.p12"
         },
         dmg: {
