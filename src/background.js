@@ -109,9 +109,10 @@ app.on("ready", async () => {
       });
     } else if (process.platform === "darwin") {
       // Hacky workaround for macOS
-      // console.log("test");
-      // let ankibackend = require("child_process").spawn("backend/ankibackend");
-      let ankibackend = require("child_process").exec("../backend/ankibackend");
+      console.log("Current Directory: ", __dirname);
+      const dir = __dirname.toString();
+      const backendPath = dir.replace("/Resources/app.asar", "/backend/ankibackend").replaceAll(" ","\\ ");
+      let ankibackend = require("child_process").exec(backendPath);
       ankibackend.stdout.on("data", function (data) {
         console.log("data: ", data.toString("utf8"));
       });

@@ -1,34 +1,13 @@
 <template>
-<v-data-table
-    :headers="headers"
-    :items="cards"
-    class="elevation-1"
-  >
+  <v-data-table :headers="headers" :items="cards" class="elevation-1">
     <template v-slot:top>
-      <v-toolbar
-        flat
-      >
+      <v-toolbar flat>
         <v-toolbar-title>{{ $route.params.deckname }}</v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        ></v-divider>
+        <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-dialog
-          v-model="dialog"
-          max-width="500px"
-        >
+        <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              dark
-              class="mb-2"
-              v-bind="attrs"
-              v-on="on"
-            >
-              New Item
-            </v-btn>
+            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"> New Item </v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -37,42 +16,19 @@
 
             <v-card-text>
               <v-container>
-                
-                    <v-text-field
-                      v-model="editedItem.question"
-                      label="Question"
-                    ></v-text-field>
-                    <v-textarea
-                      v-model="editedItem.answer"
-                      label="Answer"
-                    ></v-textarea>
-                  
+                <v-text-field v-model="editedItem.question" label="Question"></v-text-field>
+                <v-textarea v-model="editedItem.answer" label="Answer"></v-textarea>
               </v-container>
             </v-card-text>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="close"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="save"
-              >
-                Save
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
+              <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog
-          v-model="gendeck"
-          max-width="500px"
-        >
+        <v-dialog v-model="gendeck" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               color="primary"
@@ -80,7 +36,7 @@
               class="mb-2"
               v-bind="attrs"
               v-on="on"
-              style="margin-left: 20px;"
+              style="margin-left: 20px"
             >
               Generate deck
             </v-btn>
@@ -92,29 +48,16 @@
 
             <v-card-text>
               <v-container>
-                <v-text-field
-                  v-model="sample.keywords"
-                  label="No. of keywords"
-                ></v-text-field>
-                <v-textarea
-                  v-model="sample.passage"
-                  label="Sample passage"
-                ></v-textarea>
+                <v-text-field v-model="sample.keywords" label="No. of keywords"></v-text-field>
+                <v-textarea v-model="sample.passage" label="Sample passage"></v-textarea>
               </v-container>
             </v-card-text>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="generatedeck"
-              >
-                Generate
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="generatedeck"> Generate </v-btn>
             </v-card-actions>
           </v-card>
-
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
@@ -143,29 +86,16 @@
     </template>
 
     <template v-slot:item.answer="{ item }">
-        <div class="answer">
-          {{item.answer}}
-        </div>
+      <div class="answer">
+        {{ item.answer }}
+      </div>
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
-    <template v-slot:no-data>
-      No data
-    </template>
+    <template v-slot:no-data> No data </template>
   </v-data-table>
 </template>
 
@@ -175,163 +105,135 @@ import axios from "axios";
 export default Vue.extend({
   name: "editdeck",
 
-
   data: () => ({
-      dialog: false,
-      dialogDelete: false,
-      gendeck: false,
-
-      sample: {
-       
-          passage:"",
-          keywords:0,
-        
-      },
-
-
-      headers: [
-        {
-          text: "Question",
-          align: "start",
-          sortable: false,
-          value: "question",
-        },
-        { text: "Actions", value: "actions", sortable: false,align:"right" },
-        
-      ],
-      cards: [],
-      editedIndex: -1,
-      editedItem: {
-        question: "",
-        answer: "",
-        deckid: -1,
-      },
-      defaultItem: {
-        question: "",
-        answer: "",
-      },
-    }),
-
-    computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? "New Question" : "Edit Question";
-      },
+    dialog: false,
+    dialogDelete: false,
+    gendeck: false,
+    sample: {
+      passage: "",
+      keywords: 0,
     },
 
-    watch: {
-      dialog (val) {
-        val || this.close();
+    headers: [
+      {
+        text: "Question",
+        align: "start",
+        sortable: false,
+        value: "question",
       },
-      dialogDelete (val) {
-        val || this.closeDelete();
-      },
+      { text: "Actions", value: "actions", sortable: false, align: "right" },
+    ],
+    cards: [],
+    editedIndex: -1,
+    editedItem: {
+      question: "",
+      answer: "",
+      deckid: -1,
+    },
+    defaultItem: {
+      question: "",
+      answer: "",
+    },
+  }),
+
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "New Question" : "Edit Question";
+    },
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+    dialogDelete(val) {
+      val || this.closeDelete();
+    },
+  },
+
+  created() {
+    this.deckid = this.$route.params.deckid;
+    this.deckname = this.$route.params.name;
+    this.initialize();
+  },
+
+  methods: {
+    initialize() {
+      axios.get("/cards/edit/" + this.deckid).then((resp) => {
+        console.log(resp.data);
+        this.cards = resp.data;
+      });
     },
 
-    created () {
-      this.deckid = this.$route.params.deckid;
-      this.deckname = this.$route.params.name;
-      this.initialize();
+    editItem(item) {
+      this.editedIndex = this.cards.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+
+      this.dialog = true;
     },
 
-    methods: {
-      initialize () {
-        
-        axios.get("/cards/edit/" + this.deckid).then(resp => {
-          console.log(resp.data);
-          this.cards = resp.data;
-        });
-      
+    deleteItem(item) {
+      this.editedIndex = this.cards.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
 
-        // this.cards = [
-        //   {
-        //     question: "How old is janson?",
-        //     answer: "159",
-        //   },
-        //   {
-        //     question: "what is 1+1",
-        //     answer: "2",
-        //   },
-        // ]
-        
-      },
+    deleteItemConfirm() {
+      axios.delete("/cards/edit/" + this.deckid, { data: this.editedItem }).then(() => {
+        this.initialize();
+      });
+      this.closeDelete();
+    },
 
-      editItem (item) {
-        this.editedIndex = this.cards.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-        
-        this.dialog = true;
-      },
-      
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
 
-      deleteItem (item) {
-        this.editedIndex = this.cards.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-        this.dialogDelete = true;
-        
-      },
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
 
-      deleteItemConfirm () {
-        axios.delete("/cards/edit/"+this.deckid, {data: this.editedItem}).then(() => {
-            this.initialize();
-        });
-        //this.topics.splice(this.editedIndex, 1);
-        this.closeDelete();
-      },
-
-      close () {
-        this.dialog = false;
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem);
-          this.editedIndex = -1;
-        });
-      },
-
-      closeDelete () {
-        this.dialogDelete = false;
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem);
-          this.editedIndex = -1;
-        });
-      },
-
-      save () {
-        if (this.editedIndex > -1) {
-          
-          axios.patch("/cards/edit/"+this.deckid,this.editedItem).then(() => {
-            this.initialize();
-          });
-        } else {
-          console.log(this.deckid);
-          this.editedItem["deckid"] = this.deckid;
-          console.log(this.editedItem);
-          axios.post("/cards/edit/"+this.deckid,this.editedItem).then(() => {
-            this.initialize();
-          });
-        }
-        this.close();
-      },
-
-      generatedeck () {
-        this.gendeck = false;
-        console.log(this.deckid);
-        console.log(this.sample);
-        axios.post("/cards/generate/"+this.deckid,this.sample).then(() => {
+    save() {
+      if (this.editedIndex > -1) {
+        axios.patch("/cards/edit/" + this.deckid, this.editedItem).then(() => {
           this.initialize();
         });
-      },
+      } else {
+        console.log(this.deckid);
+        this.editedItem["deckid"] = this.deckid;
+        console.log(this.editedItem);
+        axios.post("/cards/edit/" + this.deckid, this.editedItem).then(() => {
+          this.initialize();
+        });
+      }
+      this.close();
+    },
 
-    }
-      
-      
-  });
-
+    generatedeck() {
+      this.gendeck = false;
+      console.log(this.deckid);
+      console.log(this.sample);
+      axios.post("/cards/generate/" + this.deckid, this.sample).then(() => {
+        this.initialize();
+      });
+    },
+  },
+});
 </script>
 
 <style>
 .answer {
-  width: 600px; 
+  width: 600px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 </style>
