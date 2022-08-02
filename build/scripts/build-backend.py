@@ -18,4 +18,4 @@ elif sys.platform == "darwin":
         os.system("pyinstaller --clean --osx-entitlements-file ../build/entitlements.mac.plist --osx-bundle-identifier me.thinkerpal.dhs.anki22 --onefile --add-binary db/backend.db:db --exclude=tkinter --hidden-import requests --distpath . --name ankibackend backend.py")
     else:
         
-        os.system(f"pyinstaller --clean --osx-entitlements-file ../build/entitlements.mac.plist --osx-bundle-identifier me.thinkerpal.dhs.anki22 --codesign-identity {os.environ['CODESIGN_ANKI']} --onefile --add-binary db/backend.db:db --exclude=tkinter --hidden-import requests --hidden-import flask-cors --distpath . --name ankibackend backend.py")
+        os.system(f"pyinstaller --clean --osx-entitlements-file ../build/entitlements.mac.plist --osx-bundle-identifier me.thinkerpal.dhs.anki22 --codesign-identity {os.environ['CODESIGN_ANKI']} --onefile --windowed --add-data db/backend.db:db --exclude=tkinter --hidden-import requests --hidden-import flask-cors --distpath . --name ankibackend backend.py")

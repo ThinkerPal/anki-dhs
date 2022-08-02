@@ -5,7 +5,7 @@ module.exports = defineConfig({
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        appId: "sg.dhs.computing.2022.ankirevisionapp",
+        appId: "sg.dhs.computing.2022.revisionapp",
         productName: "Anki Revision App",
         mac: {
           category: "public.app-category.education",
