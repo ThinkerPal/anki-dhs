@@ -19,10 +19,9 @@ module.exports = defineConfig({
           target: [
             {
               target: "dmg",
-              arch: "x64",
+              arch: "universal",
             },
           ],
-          // provisioningProfile: "/Users/thinkerpal/tkrobot.appledist.p12"
         },
         dmg: {
           sign: false,
