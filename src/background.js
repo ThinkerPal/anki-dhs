@@ -27,7 +27,7 @@ async function createWindow() {
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return {action: "deny"};
-  })
+  });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -120,6 +120,17 @@ app.on("ready", async () => {
       const dir = __dirname.toString();
       const backendPath = dir.replace("/Resources/app.asar", "/backend/ankibackend").replaceAll(" ","\\ ");
       let ankibackend = require("child_process").exec(backendPath);
+      ankibackend.stdout.on("data", function (data) {
+        console.log("data: ", data.toString("utf8"));
+      });
+      ankibackend.stderr.on("data", function(data) {
+        console.log(`stderr: ${data}`); // when error
+      });
+    } else if (process.platform === "linux") {
+      // Hacky workaround for macOS
+      console.log("Current Directory: ", __dirname);
+      const dir = __dirname.toString();
+      let ankibackend = require("child_process").spawn("backend/ankibackend");
       ankibackend.stdout.on("data", function (data) {
         console.log("data: ", data.toString("utf8"));
       });
