@@ -2,6 +2,8 @@
 
 This app is made for DHS computing students to revise their work 
 
+Grab the download [here](https://github.com/ThinkerPal/anki-dhs/releases)
+
 This app is based on the client template found at buildingblocs/vuetify-todo-app. Major thanks to ThePyProgrammer for setting the template up
 
 ## Project Checklist:
